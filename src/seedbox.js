@@ -1,5 +1,4 @@
 const rp = require('request-promise');
-const querystring = require('querystring');
 
 const { postData } = require('./fetch');
 const config = require('../config');
@@ -51,7 +50,7 @@ const uploadQbittorrent = async torrent => {
     };
 
     const response = await postData({
-        url: `${settings.baseUrl}/${settings.apiPath}/torrents/add`,
+        url: `${config.seebox.baseUrl}/${config.seebox.apiPath}/torrents/add`,
         jar: await getCookieJar(),
         headers: { 'Content-Type': 'multipart/form-data' },
         formData

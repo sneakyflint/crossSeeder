@@ -7,7 +7,6 @@
     "restore": "node src/index.js restoreIndexers"
   },
   "dependencies": {
-    "async-exit-hook": "^2.0.1",
     "lowdb": "^1.0.0",
     "moment": "^2.24.0",
     "request": "^2.88.2",

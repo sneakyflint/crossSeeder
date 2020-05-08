@@ -1,5 +1,6 @@
 
 
+/** do NOT change the default timeout - this is so the torrent APIs do not get hammered - change at your own risk */
 const delay = async (timeout=5000) => new Promise(resolve => setTimeout(resolve, timeout));
 module.exports.delay = delay;
 
