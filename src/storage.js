@@ -21,7 +21,7 @@ function _getTable(fileName, table = config.global.dbTable) {
     if (_fileName === fileName && _table === table) return _table;
     _fileName = fileName;
 
-    const adapter = new FileSync(`./stores/${fileName}.json`);
+    const adapter = new FileSync(`src/stores/${fileName}.json`);
     _db = low(adapter);
 
     _db.defaults({ [table]: [] }).write();
