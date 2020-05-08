@@ -1,0 +1,17 @@
+{
+  "name": "cross-seeder",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node src/index.js",
+    "save": "node src/index.js saveIndexers",
+    "restore": "node src/index.js restoreIndexers"
+  },
+  "dependencies": {
+    "async-exit-hook": "^2.0.1",
+    "lowdb": "^1.0.0",
+    "moment": "^2.24.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "rimraf": "^3.0.2"
+  }
+}
