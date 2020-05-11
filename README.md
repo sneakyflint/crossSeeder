@@ -12,9 +12,16 @@ NOTE: Run this program at your own risk. It will not delete any files but does c
 * Run `npm install`
 * copy the `config.example.js` file to `config.js`
 * add your radarr url and api key
-* add your qBitorrent username, password, and url
+* add your qBittorrent username, password, and url
   
 ## Usage
 * Run `npm run save` to save you current indexer setings
 * Run `npm start` to start cross seeder
 * Run `npm run restore` to restore indexer settingsd saved from `npm run save`
+
+## Development
+Due to professional software and a growing number of open source obligations, I won't have time to maintain this project. This was just asomething I wanted to share to others that might find it just as useful as I do. That being said, I will accept pull requests for new features and may find time for small bug fixes. For reference, the features I'd like to see at the moment are:
+
+* rtorrent and deluge integration
+* better non tech friendly way to set settings that don't use JSON
+* more detailed installation and usage instructions with pictures
