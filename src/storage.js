@@ -33,47 +33,36 @@ function _getTable(fileName, table = dbTable) {
 }
 
 /**
- * return raw object of a found record
- */
-const _readRawFromTable = (findBy, fileName, table) => {
-    const tableRecord = _getTable(fileName, table);
-    const dbRecord = tableRecord.find(findBy);
-    return dbRecord;
-}
-
-/**
  * create a timestamp
  */
-const _createTimeStamp = () => moment(new Date()).format(timestampFormat);
+const createTimeStamp = () => moment(new Date()).format(timestampFormat);
 
 /**
  * allw to write multiple records to db
  */
 const writeAllToTable = (data, fileName, table) => {
     const tableRecord = _getTable(fileName, table);
-    const _writeTime = _createTimeStamp();
+    const writeTime = createTimeStamp();
 
-    if (Array.isArray(data)) return tableRecord.push(...data, _writeTime).write();
-    return tableRecord.push({ ...data, _writeTime }).write();
+    if (Array.isArray(data)) return tableRecord.push(...data, writeTime).write();
+    return tableRecord.push({ ...data, writeTime }).write();
 }
 module.exports.writeAllToTable = writeAllToTable;
 
 /**
- * generates object to search for in db
- */
-const _generateSearchQuery = function (data) {
-    let findBy = { id: data.id };
-    return findBy;
-}
-
-/**
  * write a single record to the db
  */
-const writeToTable = (data, fileName, table) => {
+const writeToTable = (record, fileName, table) => {
     const tableRecord = _getTable(fileName, table);
 
-    data._writeTime = _createTimeStamp();
-    return tableRecord.push(data).write();
+    const recordToSave = {
+        id: record.id,
+        title: record.title,
+        relativePath: record.relativePath,
+        writeTime: createTimeStamp(),
+    };
+
+    return tableRecord.push(recordToSave).write();
 }
 module.exports.writeToTable = writeToTable;
 
@@ -81,22 +70,7 @@ module.exports.writeToTable = writeToTable;
  * return plain json object of a found record
  */
 const readFromTable = (data, fileName, table) => {
-    const findBy = _generateSearchQuery(data);
-    const dbRecord = _readRawFromTable(findBy, fileName, table).value();
-    return dbRecord;
+    const tableRecord = _getTable(fileName, table);
+    return tableRecord.find({ id: data.id, relativePath: data.relativePath }).value();
 }
 module.exports.readFromTable = readFromTable;
-
-/**
- * generates object to save
- */
-function generateSaveObject({data, siteName, processed, generated, uploaded}) {
-    let recordToSave = {
-        id: data.id,
-        title: data.title,
-        _writeTime: _createTimeStamp(),
-    };
-
-    return recordToSave;
-}
-module.exports.generateSaveObject = generateSaveObject;

@@ -1,3 +1,4 @@
+const config = require('../config');
 
 
 /** do NOT change the default timeout - this is so the torrent APIs do not get hammered - change at your own risk */
@@ -20,6 +21,7 @@ const formatRecord = record => {
         title: record.title,
         source: (record.movieFile.quality.quality.source || '').toLowerCase(),
         videoFormat: (record.movieFile.releaseGroup || '').toLowerCase(),
+        relativePath: (record.movieFile.relativePath || '').toLowerCase(),
         gbSize: convertToGB(record.movieFile.size),
         folderName: record.folderName,
     }
@@ -63,7 +65,6 @@ module.exports.checkMatchingMovie = function(result, record) {
 
     const matchingTorrent = {
         ...record,
-        resultReleaseGroup: resultReleaseGroup,
         downloadUrl: result.downloadUrl,
         commentUrl: result.commentUrl,
         searchTitle: result.title,

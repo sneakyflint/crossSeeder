@@ -2,6 +2,7 @@ const rimraf = require('rimraf');
 
 const { checkMatchingMovie, logger, formatRecord, convertIndexerToFileName, delay } = require('./tools');
 const { readFromTable, writeToTable, generateSaveObject } = require('./storage');
+const { uploadTorrent } = require('./seedbox');
 const { getMovieList, getAllIndexers, restoreIndexerSettings, disableAllIndexers, getMovieResults, enableIndexer, saveIndexerSettings } = require('./radarr');
 const config = require('../config');
 
@@ -23,8 +24,10 @@ const syncMovies = async () => {
 
         return true;
     });
-    await logger(`${filteredIndexers.length} matching indexers found:\n ${filteredIndexers.map(indexer => `${indexer.name}\n`)}`);
 
+    const indexerNames = filteredIndexers.map(indexer => indexer.name).join(`\n`);
+    await logger(`${filteredIndexers.length} matching indexers found:\n ${indexerNames}`);
+    await logger(`-----------`);
 
     for await (const indexer of filteredIndexers) {
         await disableAllIndexers();
@@ -62,14 +65,14 @@ async function getMovieTorrents(torrentSite, records){
             const matchingTorrent = checkMatchingMovie(result, record);
             if (!matchingTorrent) continue;
 
-            await logger(`match: ${matchingTorrent.title} ${matchingTorrent.resultReleaseGroup} - ${matchingTorrent.commentUrl}`);
+            await logger(`match: ${matchingTorrent.title} - ${matchingTorrent.commentUrl}`);
             numberOfMatches++;
 
             await uploadTorrent(matchingTorrent);
         }
 
         // save that we have processed the movie record for a torrent site
-        await writeToTable(generateSaveObject({ data: record }), torrentSite);
+        await writeToTable(record, torrentSite);
     }
 
     await logger(`-^- ${numberOfMatches} matches found for ${torrentSite}`);

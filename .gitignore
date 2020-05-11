@@ -1,4 +1,4 @@
-/src/stores
+/src/stores/*.json
 config.js
 
 /node_modules

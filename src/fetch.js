@@ -13,7 +13,7 @@ module.exports.getData = async function getData(parameters) {
     } catch(e) {
         await delay();
         try {
-            // await console.log(parameters);
+            // console.log(parameters);
             return await rp({ json: true, timeout: 10000000, ...parameters });
         } catch(e) {
             await console.log(e);
@@ -28,12 +28,12 @@ module.exports.getData = async function getData(parameters) {
  */
 module.exports.postData = async function postData(parameters) {
     try {
-        // await console.log(parameters);
+        // console.log(parameters);
         return await rp.post({ json: true, timeout: 10000000, ...parameters });
     } catch (e) {
         await delay();
         try {
-            // await console.log(parameters);
+            // console.log(parameters);
             return await rp.post({ json: true, timeout: 10000000, ...parameters });
         } catch (e) {
             await console.log(e);
@@ -48,12 +48,12 @@ module.exports.postData = async function postData(parameters) {
  */
 module.exports.putData = async function postData(parameters) {
     try {
-        // await console.log(parameters);
+        // console.log(parameters);
         return await rp.put({ json: true, timeout: 10000000, ...parameters });
     } catch (e) {
         await delay();
         try {
-            // await console.log(parameters);
+            // console.log(parameters);
             return await rp.put({ json: true, timeout: 10000000, ...parameters });
         } catch (e) {
             await console.log(e);

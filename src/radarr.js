@@ -48,7 +48,6 @@ async function getAllIndexers() {
     const url = getIndexerUrl();
     const indexerList = await getData({ uri: url });
     return indexerList;
-    console.log({ indexerList })
 }
 module.exports.getAllIndexers = getAllIndexers;
 
@@ -121,9 +120,8 @@ async function getMovieResults({ movieId, title }) {
     await logger(`finding: ${title}`);
 
     const parameters = querystring.stringify({
-        movieId: 0,
-        sort_by: 'releaseWeight',
-        order: 'asc',
+        movieId,
+        apiKey: config.radarr.apiKey,
     });
 
     const searchUrl = `${_getRadarrApiPath()}/release?${parameters}`;

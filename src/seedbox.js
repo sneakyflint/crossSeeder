@@ -11,14 +11,16 @@ async function getCookieJar() {
     // if not jar then we need to create one and login to have session cookies
     _jar = rp.jar();
 
-    await postData({
+    const body = {
         url: `${config.seedbox.url}/api/v2/auth/login`,
         jar: _jar,
         form: {
             username: config.seedbox.username,
             password: config.seedbox.password
         }
-    });
+    };
+
+    await postData(body);
 
     return _jar;
 }
