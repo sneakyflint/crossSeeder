@@ -4,7 +4,7 @@ This program will use Radarr to find movies currently downloaded and search thro
 
 This program will find all your indexers and save the current settings as it disables them one by one when checking. You first need to make sure to save your indexer settings by running `npm run save` BEFORE running `npm start`. The program will attempt to restore your saved indexer setings but if for some reason it doesn't you can restore them manually with `npm run restore`.
 
-NOTE: Run this program at your own risk. It wiull not delte any files but does change your indexer settings so be sure to back them up in Radarr before running this program.
+NOTE: Run this program at your own risk. It will not delete any files but does change your indexer settings so be sure to back them up in Radarr before running this program.
 
 ## Installation
 
