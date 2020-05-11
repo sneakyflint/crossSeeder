@@ -8,10 +8,7 @@ const config = require('../config');
 
 
 const syncMovies = async () => {
-    const myArgs = process.argv;
-
     const indexerList = await getAllIndexers();
-    await logger(`${indexerList.length} indexers found`);
 
     // get all movies that are downloaded
     // format records and only get data we need - records are too big other wise for storage
@@ -19,10 +16,17 @@ const syncMovies = async () => {
     const records = movieList.records.filter(record => record.downloaded && record.movieFile).map(formatRecord);
     await logger(`${movieList.records.length} movies found and ${records.length} movies ready to process`);
 
-    for await (const indexer of indexerList) {
+    // filter by black/white lists in config
+    const filteredIndexers = indexerList.filter(indexer => {
+        if (config.global.blackListIndexers && config.global.blackListIndexers.length && config.global.blackListIndexers.includes(indexer.name)) return false;
+        if (config.global.whiteListIndexers && config.global.whiteListIndexers.length && !config.global.whiteListIndexers.includes(indexer.name)) return false;
 
-        if (config.global.skipIndexers && config.global.skipIndexers.includes(indexer.name)) continue;
+        return true;
+    });
+    await logger(`${filteredIndexers.length} matching indexers found:\n ${filteredIndexers.map(indexer => `${indexer.name}\n`)}`);
 
+
+    for await (const indexer of filteredIndexers) {
         await disableAllIndexers();
         await enableIndexer(indexer);
 

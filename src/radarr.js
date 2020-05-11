@@ -6,11 +6,26 @@ const { readFromTable, writeAllToTable } = require('./storage');
 const config = require('../config');
 
 /**
+ * get base radarr path - v2 or v3?
+ */
+const _getRadarrApiPath = () => {
+    return `${config.radarr.url}/api`;
+}
+
+/**
  * get a list of movies from radarr that are downloaded already
  */
  const getMovieList = async () => {
-    const parameters = querystring.stringify(Object.assign({}, config.radarr.movie.query, { apiKey: config.radarr.apiKey }));
-    const movieListUrl = `${config.radarr.baseUrl}/${config.radarr.apiPath}/${config.radarr.movie.urlPath}?${parameters}`
+
+     const parameters = querystring.stringify({
+         page: 1,
+         pageSize: 99999,
+         sortKey: 'sortTitle',
+         sortDir: 'asc',
+         apiKey: config.radarr.apiKey,
+     });
+
+    const movieListUrl = `${_getRadarrApiPath()}/movie?${parameters}`;
 
     const movieList = await getData({ uri: movieListUrl });
     return movieList;
@@ -21,7 +36,7 @@ function getIndexerUrl(indexerId) {
     const id = indexerId ? `/${indexerId}` : '';
 
     const parameters = querystring.stringify({ apiKey: config.radarr.apiKey });
-    const url = `${config.radarr.baseUrl}/${config.radarr.apiPath}/${config.radarr.indexers.urlPath}${id}?${parameters}`;
+    const url = `${_getRadarrApiPath()}/indexer${id}?${parameters}`;
 
     return url;
 }
@@ -105,8 +120,13 @@ module.exports.disableAllIndexers = disableAllIndexers;
 async function getMovieResults({ movieId, title }) {
     await logger(`finding: ${title}`);
 
-    const parameters = querystring.stringify(Object.assign({}, config.radarr.release.query, { movieId, apiKey: config.radarr.apiKey }));
-    const searchUrl = `${config.radarr.baseUrl}/${config.radarr.apiPath}/${config.radarr.release.urlPath}?${parameters}`;
+    const parameters = querystring.stringify({
+        movieId: 0,
+        sort_by: 'releaseWeight',
+        order: 'asc',
+    });
+
+    const searchUrl = `${_getRadarrApiPath()}/release?${parameters}`;
     let searchResults = await getData({ uri: searchUrl });
     await logger(`${searchResults.length} results found`);
 

@@ -2,40 +2,17 @@
 
 module.exports = {
     radarr: {
-        baseUrl: '',
-        apiKey: '',
-        apiPath: 'api',
-        movie: {
-            urlPath: 'movie',
-            query: {
-                page: 1,
-                pageSize: 99999,
-                sortKey: 'sortTitle',
-                sortDir: 'asc',
-            }
-        },
-        release: {
-            urlPath: 'release',
-            query: {
-                movieId: 0,
-                sort_by: 'releaseWeight',
-                order: 'asc',
-            }
-        },
-        indexers: {
-            urlPath: 'indexer',
-        },
+        url: 'http://127.0.0.1:7878',
+        apiKey: 'xxxxx',
     },
     seedbox: {
-        username: '',
-        password: '',
-        baseUrl: '',
-        apiPath: 'api/v2',
+        url: 'http://127.0.0.1:8080',
+        username: 'admin',
+        password: 'adminadmin',
     },
     global: {
-        dbTable: 'torrents',
-        timestampFormat: 'MM/DD/YY hh:mma',
-        uploadFile: '_uploader',
-        skipIndexers: [],
+        blackListIndexers: [], // dont find cross seeds from these indexers
+        whiteListIndexers: [], // ONLY find cross seeds from these indexers
+        sizeThreshold: 0.4, // how much smaller or larger a torrent can be to be a 'match' (in GB)
     },
 }

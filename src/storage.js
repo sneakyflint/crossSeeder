@@ -4,16 +4,18 @@ const moment = require('moment');
 
 const config = require('../config');
 
-
 let _db = null;
 let _table = null;
 let _fileName = null;
+
+const dbTable = 'torrents';
+const timestampFormat = 'MM/DD/YY hh:mma';
 
 /**
  * return a db table
  */
 
-function _getTable(fileName, table = config.global.dbTable) {
+function _getTable(fileName, table = dbTable) {
     if (!fileName) throw new Error('No fileName given for db file');
 
     // if we want the same db as before then just return it
@@ -42,9 +44,7 @@ const _readRawFromTable = (findBy, fileName, table) => {
 /**
  * create a timestamp
  */
-const _createTimeStamp = () => {
-    return moment(new Date()).format(config.global.timestampFormat);
-}
+const _createTimeStamp = () => moment(new Date()).format(timestampFormat);
 
 /**
  * allw to write multiple records to db

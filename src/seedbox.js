@@ -12,11 +12,11 @@ async function getCookieJar() {
     _jar = rp.jar();
 
     await postData({
-        url: `${settings.baseUrl}/${settings.apiPath}/auth/login`,
+        url: `${config.seedbox.url}/api/v2/auth/login`,
         jar: _jar,
         form: {
-            username: settings.username,
-            password: settings.password
+            username: config.seedbox.username,
+            password: config.seedbox.password
         }
     });
 
@@ -50,7 +50,7 @@ const uploadQbittorrent = async torrent => {
     };
 
     const response = await postData({
-        url: `${config.seebox.baseUrl}/${config.seebox.apiPath}/torrents/add`,
+        url: `${config.seedbox.url}/api/v2/torrents/add`,
         jar: await getCookieJar(),
         headers: { 'Content-Type': 'multipart/form-data' },
         formData

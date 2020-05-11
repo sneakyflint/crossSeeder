@@ -59,7 +59,7 @@ module.exports.checkMatchingMovie = function(result, record) {
 
     // skip if not within X GB in size
     const resultGBSize = convertToGB(result.size);
-    if (!equalFloats(resultGBSize, record.gbSize, 0.4)) return false;
+    if (!equalFloats(resultGBSize, record.gbSize, config.global.sizeThreshold)) return false;
 
     const matchingTorrent = {
         ...record,
