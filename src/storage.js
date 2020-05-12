@@ -71,6 +71,10 @@ module.exports.writeToTable = writeToTable;
  */
 const readFromTable = (data, fileName, table) => {
     const tableRecord = _getTable(fileName, table);
-    return tableRecord.find({ id: data.id, relativePath: data.relativePath }).value();
+
+    const searchQuery = { id: data.id };
+    if (data.relativePath) searchQuery.relativePath = data.relativePath;
+
+    return tableRecord.find(searchQuery).value();
 }
 module.exports.readFromTable = readFromTable;
