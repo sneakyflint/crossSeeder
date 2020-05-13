@@ -28,6 +28,16 @@ const formatRecord = record => {
 }
 module.exports.formatRecord = formatRecord;
 
+module.exports.getFilteredIndexers = indexerList => {
+    const filteredIndexers = indexerList.filter(indexer => {
+        if (config.global.blackListIndexers && config.global.blackListIndexers.length && config.global.blackListIndexers.includes(indexer.name)) return false;
+        if (config.global.whiteListIndexers && config.global.whiteListIndexers.length && !config.global.whiteListIndexers.includes(indexer.name)) return false;
+        return true;
+    });
+
+    return filteredIndexers;
+}
+
 /**
  * convert byte size to GB with 2 decimals
  */

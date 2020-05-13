@@ -1,7 +1,7 @@
 const rimraf = require('rimraf');
 
-const { checkMatchingMovie, logger, formatRecord, convertIndexerToFileName, delay } = require('./tools');
-const { readFromTable, writeToTable, generateSaveObject } = require('./storage');
+const { checkMatchingMovie, logger, formatRecord, convertIndexerToFileName, delay, getFilteredIndexers } = require('./tools');
+const { readFromTable, writeToTable, generateSaveObject, deleteFromTable } = require('./storage');
 const { uploadTorrent } = require('./seedbox');
 const { getMovieList, getAllIndexers, restoreIndexerSettings, disableAllIndexers, getMovieResults, enableIndexer, saveIndexerSettings } = require('./radarr');
 const config = require('../config');
@@ -18,12 +18,7 @@ const syncMovies = async () => {
     await logger(`${movieList.records.length} movies found and ${records.length} movies ready to process`);
 
     // filter by black/white lists in config
-    const filteredIndexers = indexerList.filter(indexer => {
-        if (config.global.blackListIndexers && config.global.blackListIndexers.length && config.global.blackListIndexers.includes(indexer.name)) return false;
-        if (config.global.whiteListIndexers && config.global.whiteListIndexers.length && !config.global.whiteListIndexers.includes(indexer.name)) return false;
-
-        return true;
-    });
+    const filteredIndexers = getFilteredIndexers(indexerList);
 
     const indexerNames = filteredIndexers.map(indexer => indexer.name).join(`\n`);
     await logger(`${filteredIndexers.length} matching indexers found:\n ${indexerNames}`);
@@ -79,6 +74,30 @@ async function getMovieTorrents(torrentSite, records){
 }
 
 /**
+ * delete a movie from all indexer storage tables
+ */
+async function deleteMovieById() {
+    const indexerList = await getAllIndexers();
+
+    // filter by black/white lists in config
+    const filteredIndexers = getFilteredIndexers(indexerList);
+
+    const myArgs = process.argv;
+    const movieIds = myArgs.filter(arg => !isNaN(arg)).map(arg => parseInt(arg, 10));
+    await logger(`deleting ${movieIds.join(',')}`);
+
+    for await (const indexer of filteredIndexers) {
+        const fileName = convertIndexerToFileName(indexer);
+
+        for (const movieId of movieIds) {
+            const result = deleteFromTable({ id: parseInt(movieId) }, fileName);
+            if (result) await logger(`deleted movie with id ${movieId} (${result.title}) from ${fileName}`);
+            else await logger(`could not delete movie with id ${movieId} from ${fileName}`);
+        }
+    }
+}
+
+/**
  * on error or SIG exit, restore indexers
  */
 function setExitRestoring() {
@@ -99,11 +118,15 @@ function setExitRestoring() {
     const myArgs = process.argv;
     const saveIndexers = myArgs.includes('saveIndexers');
     const restoreIndexers = myArgs.includes('restoreIndexers');
+    const deleteMovie = myArgs.includes('deleteMovie');
 
     if (saveIndexers) {
         rimraf.sync(`./indexerSettings.json`);
         await saveIndexerSettings();
 
+    } else if (deleteMovie) {
+        await deleteMovieById();
+        
     } else if (restoreIndexers) {
         await restoreIndexerSettings();
 

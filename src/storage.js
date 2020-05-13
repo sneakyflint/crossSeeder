@@ -78,3 +78,24 @@ const readFromTable = (data, fileName, table) => {
     return tableRecord.find(searchQuery).value();
 }
 module.exports.readFromTable = readFromTable;
+
+/**
+ * delete an entire record
+ */
+const deleteFromTable = (data, fileName, table) => {
+    const dbRecord = _readRawFromTable({ id: data.id }, fileName, table);
+    if (!dbRecord.value()) return;
+
+    _getTable(fileName, table).remove(dbRecord).write();
+    return dbRecord.value();
+}
+module.exports.deleteFromTable = deleteFromTable;
+
+/**
+ * return raw object of a found record
+ */
+const _readRawFromTable = (findBy, fileName, table) => {
+    const tableRecord = _getTable(fileName, table);
+    const dbRecord = tableRecord.find(findBy);
+    return dbRecord;
+}
