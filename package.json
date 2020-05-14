@@ -5,7 +5,9 @@
     "start": "node src/index.js",
     "save": "node src/index.js saveIndexers",
     "restore": "node src/index.js restoreIndexers",
-    "delete": "node src/index.js deleteMovie"
+    "delete": "node src/index.js deleteMovie",
+    "pruge": "node src/index.js deleteMovie",
+    "remove": "node src/index.js deleteMovie"
   },
   "dependencies": {
     "lowdb": "^1.0.0",
