@@ -86,7 +86,7 @@ const deleteFromTable = (data, fileName, table) => {
     const dbRecord = _readRawFromTable({ id: data.id }, fileName, table);
     if (!dbRecord.value()) return;
 
-    _getTable(fileName, table).remove(dbRecord).write();
+    _getTable(fileName, table).remove({ id: data.id }).write();
     return dbRecord.value();
 }
 module.exports.deleteFromTable = deleteFromTable;
