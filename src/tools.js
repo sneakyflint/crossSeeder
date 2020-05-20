@@ -19,8 +19,8 @@ const formatRecord = record => {
     return {
         id: record.id,
         title: record.title,
-        source: (record.movieFile.quality.quality.source || '').toLowerCase(),
-        videoFormat: (record.movieFile.releaseGroup || '').toLowerCase(),
+        quality: (record.movieFile.quality.quality.name || '').toLowerCase(),
+        releaseGroup: (record.movieFile.releaseGroup || '').toLowerCase(),
         relativePath: (record.movieFile.relativePath || '').toLowerCase(),
         gbSize: convertToGB(record.movieFile.size),
         folderName: record.folderName,
@@ -61,17 +61,19 @@ const equalFloats = (n1, n2, precision=1) =>  {
  */
 module.exports.checkMatchingMovie = function(result, record) {
 
-    // skip if result not 1080p
-    const hdQuality = /1080/.test(result.quality.quality.name);
-    if (!hdQuality) return false;
-
     // skip if quality mismatch
-    const resultQuality = ((result.quality && result.quality.quality.source) || '').toLowerCase();
+    const resultQuality = ((result.quality && result.quality.quality && result.quality.quality.name) || '').toLowerCase();
     if (record.source !== resultQuality) return false;
 
     // skip if not within X GB in size
     const resultGBSize = convertToGB(result.size);
     if (!equalFloats(resultGBSize, record.gbSize, config.global.sizeThreshold)) return false;
+
+    // if want to compare by release group then do that
+    if (config.matchByReleaseGroup){
+        const resultReleaseGroup = (result.releaseGroup || '').toLowerCase();
+        if (resultReleaseGroup !== record.releaseGroup) return false;
+    }
 
     const matchingTorrent = {
         ...record,
