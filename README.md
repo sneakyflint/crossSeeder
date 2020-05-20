@@ -15,7 +15,7 @@ NOTE: Run this program at your own risk. It will not delete any files but does c
 * add your qBittorrent username, password, and url
   
 ## Usage
-* Run `npm run save` to save you current indexer setings
+* Run `npm run save` to save you current indexer settings
 * Run `npm start` to start cross seeder
 * Run `npm run restore` to restore indexer settings saved from `npm run save`
 
