@@ -16,7 +16,7 @@ module.exports.convertIndexerToFileName = indexer => {
  * @return {Object}
  */
 const formatRecord = record => {
-    return {
+    const formattedRecord = {
         id: record.id,
         title: record.title,
         quality: (record.movieFile.quality.quality.name || '').toLowerCase(),
@@ -25,6 +25,7 @@ const formatRecord = record => {
         gbSize: convertToGB(record.movieFile.size),
         folderName: record.folderName,
     }
+    return formattedRecord;
 }
 module.exports.formatRecord = formatRecord;
 
@@ -63,7 +64,7 @@ module.exports.checkMatchingMovie = function(result, record) {
 
     // skip if quality mismatch
     const resultQuality = ((result.quality && result.quality.quality && result.quality.quality.name) || '').toLowerCase();
-    if (record.source !== resultQuality) return false;
+    if (record.quality !== resultQuality) return false;
 
     // skip if not within X GB in size
     const resultGBSize = convertToGB(result.size);
