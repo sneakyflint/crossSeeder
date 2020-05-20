@@ -71,7 +71,7 @@ module.exports.checkMatchingMovie = function(result, record) {
     if (!equalFloats(resultGBSize, record.gbSize, config.global.sizeThreshold)) return false;
 
     // if want to compare by release group then do that
-    if (config.matchByReleaseGroup){
+    if (config.global.matchByReleaseGroup){
         const resultReleaseGroup = (result.releaseGroup || '').toLowerCase();
         if (resultReleaseGroup !== record.releaseGroup) return false;
     }
