@@ -21,7 +21,7 @@ const syncMovies = async () => {
     const filteredIndexers = getFilteredIndexers(indexerList);
 
     const indexerNames = filteredIndexers.map(indexer => indexer.name).join(`\n`);
-    await logger(`${filteredIndexers.length} matching indexers found:\n ${indexerNames}`);
+    await logger(`${filteredIndexers.length} matching indexers found:\n${indexerNames}`);
     await logger(`-----------`);
 
     for await (const indexer of filteredIndexers) {
@@ -81,18 +81,26 @@ async function deleteMovieById() {
 
     // filter by black/white lists in config
     const filteredIndexers = getFilteredIndexers(indexerList);
-
-    const myArgs = process.argv;
-    const movieIds = myArgs.filter(arg => !isNaN(arg)).map(arg => parseInt(arg, 10));
-    await logger(`deleting ${movieIds.join(',')}`);
+    const [, , , ...movieIds] = process.argv;
+    await logger(`deleting ${movieIds.join('\n')}`);
+    await logger(`----------------`);
 
     for await (const indexer of filteredIndexers) {
         const fileName = convertIndexerToFileName(indexer);
 
         for (const movieId of movieIds) {
-            const result = deleteFromTable({ id: parseInt(movieId) }, fileName);
-            if (result) await logger(`deleted movie with id ${movieId} (${result.title}) from ${fileName}`);
-            else await logger(`could not delete movie with id ${movieId} from ${fileName}`);
+            const isSlug = isNaN(parseInt(movieId));
+
+            if (isSlug){
+                const result = deleteFromTable({ titleSlug: movieId }, fileName);
+                if (result) await logger(`deleted movie with titleSlug ${movieId} (${result.title}) from ${fileName}`);
+                await logger(`could not delete movie with titleSlug ${movieId} from ${fileName}`);
+
+            } else {
+                const result = deleteFromTable({ id: parseInt(movieId) }, fileName);
+                if (result) await logger(`deleted movie with id ${movieId} (${result.title}) from ${fileName}`);
+                await logger(`could not delete movie with id ${movieId} from ${fileName}`);
+            }
         }
     }
 }

@@ -58,6 +58,7 @@ const writeToTable = (record, fileName, table) => {
     const recordToSave = {
         id: record.id,
         title: record.title,
+        titleSlug: record.titleSlug,
         relativePath: record.relativePath,
         writeTime: createTimeStamp(),
     };

@@ -19,6 +19,7 @@ const formatRecord = record => {
     const formattedRecord = {
         id: record.id,
         title: record.title,
+        titleSlug: record.titleSlug,
         quality: (record.movieFile.quality.quality.name || '').toLowerCase(),
         releaseGroup: (record.movieFile.releaseGroup || '').toLowerCase(),
         relativePath: (record.movieFile.relativePath || '').toLowerCase(),
