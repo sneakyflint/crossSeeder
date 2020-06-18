@@ -13,13 +13,21 @@ NOTE: Run this program at your own risk. It will not delete any files but does c
 * copy the `config.example.js` file to `config.js`
 * add your Radarr url and api key
 * add your qBittorrent username, password, and url
-  
+* Make sure your qBittorrent instance has access to your movies folder at the same path Radarr does. For example, if your Radarr instance finds your movies at /movies, make sure your qBittorrent can see the equivalent folder at /movies.
+
 ## Usage
 * Run `npm run save` to save you current indexer settings
 * Run `npm start` to start cross seeder
 * Run `npm run restore` to restore indexer settings saved from `npm run save`
 
 By default crossSeeder will find cross seeds for all indexers in Radarr. You can tell crossSeeder to only cross seed indexers from a white list via `whiteListIndexers` or skip indexers from a black list via `blackListIndexers`.
+
+For example:
+```
+global: {
+    blackListIndexers: ['NZBHydra2'],
+    whiteListIndexers: ['HDME, IPTorrents']
+```
 
 ## Advanced Usage
 
